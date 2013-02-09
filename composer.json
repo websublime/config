@@ -1,0 +1,24 @@
+{
+    "name"        : "websublime/config",
+    "type"        : "package",
+    "description" : "A config componente catalogue.",
+    "keywords"    : ["config, component, catalogue"],
+    "homepage"    : "https://github.com/websublime/config",
+    "license"     : "MIT",
+    "authors"     : [
+        {
+            "name"  : "Miguel Ramos",
+            "email" : "miguel.marques.ramos@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.14",
+        "symfony/config": "2.1.*",
+        "symfony/yaml": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": {
+            "Websublime\\Config": "src/"
+        }
+    },
+}
