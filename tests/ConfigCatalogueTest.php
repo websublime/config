@@ -1,7 +1,7 @@
-<?php namespace Websublime\Config;
+<?php
 /**
 * ------------------------------------------------------------------------------------
-* ConfigCatalogue.php
+* ConfigCatalogueTest.php
 * ------------------------------------------------------------------------------------
 *
 * @package Websublime
@@ -31,45 +31,16 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+use Websublime\Config\ConfigueCatalogue;
 
-/**
- * Class for catalogue options configurations.
- */
-class ConfigueCatalogue {
+ class ConfigCatalogueTest extends \PHPUnit_Framework_TestCase {
 
-    private $catalogue;
-
-    public function __construct(array $itens)
+    public function testConfigueCatalogueInstance()
     {
-        $this->flatten($itens);
-        $this->catalogue = $itens;
-    }
+        $catalogue = new ConfigueCatalogue(array());
 
-    /**
-     * Convert multidimensionals array in one level.
-     * 
-     * @param  array  $messages
-     * @param  array $subnode
-     * @param  string $path
-     * @return array
-     */
-    protected function flatten(array &$messages, array $subnode = null, $path = null)
-    {
-        if (null === $subnode) {
-            $subnode =& $messages;
-        }
-        foreach ($subnode as $key => $value) {
-            if (is_array($value)) {
-                $nodePath = $path ? $path.'.'.$key : $key;
-                $this->flatten($messages, $value, $nodePath);
-                if (null === $path) {
-                    unset($messages[$key]);
-                }
-            } elseif (null !== $path) {
-                $messages[$path.'.'.$key] = $value;
-            }
-        }
+        $this->assertInstanceOf('Websublime\Config\ConfigCatalogue', $catalogue);
+        print sprintf('Catalogue is instance: %s','Websublime\Config\ConfigCatalogue').PHP_EOL;
     }
-}
-
-/** @end ConfigCatalogue.php **/
+ }
+/** @end ConfigCatalogueTest.php **/
