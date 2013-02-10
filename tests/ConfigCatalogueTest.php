@@ -31,16 +31,60 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-use Websublime\Config\ConfigueCatalogue;
+use Websublime\Config\ConfigCatalogue;
 
  class ConfigCatalogueTest extends \PHPUnit_Framework_TestCase {
 
     public function testConfigueCatalogueInstance()
     {
-        $catalogue = new ConfigueCatalogue(array());
+        $catalogue = new ConfigCatalogue(array());
 
         $this->assertInstanceOf('Websublime\Config\ConfigCatalogue', $catalogue);
         print sprintf('Catalogue is instance: %s','Websublime\Config\ConfigCatalogue').PHP_EOL;
+    }
+
+    public function testConfigCatalogueAddAtribute()
+    {
+        $catalogue = new ConfigCatalogue(array());
+        $catalogue->add(array('option' => 'valueAtribute'));
+
+        $this->assertCount(1, $catalogue->all());
+        print sprintf('Catalogue add one atribute: %s',$catalogue->get('option')).PHP_EOL;
+    }
+
+    public function testConfigCatalogueAddAtributeNotArray()
+    {
+        $catalogue = new ConfigCatalogue(array());
+        $catalogue->add('valueAtribute','option');
+
+        $this->assertCount(1, $catalogue->all());
+        print sprintf('Catalogue add one atribute with key: %s and value: %s', 'option', $catalogue->get('option')).PHP_EOL;
+    }
+
+    public function testConfigCatalogueGetNull()
+    {
+        $catalogue = new ConfigCatalogue(array());
+
+        $this->assertNull($catalogue->get('option'));
+        print sprintf('Catalogue get null if option do not exist: %s', $catalogue->get('option')).PHP_EOL;
+    }
+
+    public function testConfigCatalogueRemoveAtribute()
+    {
+        $catalogue = new ConfigCatalogue(array());
+        $catalogue->add(array('option' => 'valueAtribute'));
+
+        $this->assertTrue($catalogue->remove('option'));
+        print sprintf('Catalogue get true removing a option: key = %s', 'option').PHP_EOL;
+    }
+
+    public function testConfigCatalogueAtributeExist()
+    {
+        $catalogue = new ConfigCatalogue(array());
+        $catalogue->add(array('option' => 'valueAtribute'));
+
+        $this->assertTrue($catalogue->exist('option'));
+        print 'Catalogue get true if option exist.'.PHP_EOL;
     }
  }
 /** @end ConfigCatalogueTest.php **/

@@ -35,14 +35,100 @@
 /**
  * Class for catalogue options configurations.
  */
-class ConfigueCatalogue {
+class ConfigCatalogue {
 
+    /**
+     * Config options catalogue flatten array.
+     * 
+     * @var array
+     */
     private $catalogue;
 
+    /**
+     * Construct method that accepts initial config options on array format.
+     * It will transform the array if it is multidimensional on a flatten array.
+     * 
+     * @param array $itens
+     */
     public function __construct(array $itens)
     {
         $this->flatten($itens);
         $this->catalogue = $itens;
+    }
+
+    /**
+     * Method to add options to catalogue. This method expect option to be mandatory.
+     * Case $option isn't array, $key must be present because it wont be flatten.
+     * 
+     * @param mixed $option
+     * @param string $key
+     */
+    public function add($option, $key = null)
+    {
+        if(is_array($option)){
+            !is_null($key) ? $this->flatten(array($key, $option)) : $this->flatten($option);
+
+            return $this->catalogue = array_merge($this->catalogue, $option);
+        }
+
+        if(is_null($key)){
+            throw new \InvalidArgumentException(sprintf("The key expect a definition: %s gived. Your value is not a array.",$key), 1);
+        }
+
+        return $this->catalogue[$key] = $option;
+    }
+
+    /**
+     * Method to remove an option from the catalogue. The $key arg identifies the option
+     * to be unset.
+     * 
+     * @param  string $key
+     * @return boolean
+     */
+    public function remove($key)
+    {
+        if($this->exist($key)){
+            unset($this->catalogue[$key]);
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Method to get the value of an option. The $key argument identifies the option.
+     * 
+     * @param  string $key
+     * @return mixed
+     */
+    public function get($key)
+    {
+        if($this->exist($key)){
+            return $this->catalogue[$key];
+        }
+
+        return null;
+    }
+    
+    /**
+     * Method to verify if an option exists. The $key argument identifies the option.
+     * 
+     * @param  string $key
+     * @return boolean
+     */
+    public function exist($key)
+    {
+        return array_key_exists($key, $this->catalogue);
+    }
+
+    /**
+     * Method to get all options in the catalogue.
+     * 
+     * @return array
+     */
+    public function all()
+    {
+        return $this->catalogue;
     }
 
     /**
