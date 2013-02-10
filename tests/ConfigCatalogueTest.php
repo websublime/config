@@ -86,5 +86,22 @@ use Websublime\Config\ConfigCatalogue;
         $this->assertTrue($catalogue->exist('option'));
         print 'Catalogue get true if option exist.'.PHP_EOL;
     }
+
+    public function testConfigueCatalogueInvalidArgumentException()
+    {
+
+        $catalogue = new ConfigCatalogue(array());
+
+        try {
+            
+            $catalogue->add('value.no.key');
+
+        } catch (InvalidArgumentException $expected) {
+            print sprintf('ConfigCatalogue throw InvalidArgumentException : %s',$expected->getMessage()).PHP_EOL;
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
+    }
  }
 /** @end ConfigCatalogueTest.php **/

@@ -66,13 +66,13 @@ class ConfigCatalogue {
     public function add($option, $key = null)
     {
         if(is_array($option)){
-            !is_null($key) ? $this->flatten(array($key, $option)) : $this->flatten($option);
+            !is_null($key) ? $this->flatten($option = array($key, $option)) : $this->flatten($option);
 
             return $this->catalogue = array_merge($this->catalogue, $option);
         }
 
         if(is_null($key)){
-            throw new \InvalidArgumentException(sprintf("The key expect a definition: %s gived. Your value is not a array.",$key), 1);
+            throw new \InvalidArgumentException(sprintf("The key expect a definition: %s gived. Your value is not a array.",'null'));
         }
 
         return $this->catalogue[$key] = $option;
