@@ -1,7 +1,7 @@
-<?php namespace Websublime\Config;
+<?php namespace Websublime\Config\Loader;
 /**
 * ------------------------------------------------------------------------------------
-* ConfigLocator.php
+* ConfigLoader.php
 * ------------------------------------------------------------------------------------
 *
 * @package Websublime
@@ -31,48 +31,40 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Config\Loader\FileLoader,
+    Symfony\Component\Config\FileLocator,
+    Websublime\Config\ConfigCatalogue;
 
-/**
- * Class for register paths to find config files.
- */
-class ConfigLocator extends FileLocator {
+abstract class ConfigLoader extends FileLoader {
 
-    /**
-     * Method construct that accepts an arrays of dirs paths.
-     * 
-     * @param array $dirs
-     */
-    public function __construct(array $dirs = array())
+    public function __construct(FileLocator $locator)
     {
-        parent::__construct($dirs);
+        parent::__construct($locator);
     }
 
     /**
-     * Method to add a path or an array of paths to locator for future search of files.
+     * Method for loading resources of options.
      * 
-     * @param string/array $path
-     */
-    public function addPath($path)
-    {
-        if(is_string($path)){
-            $this->paths[] = $path;            
-        }
-        
-        if(is_array($path)){
-            $this->paths = array_merge($this->paths, $paths);
-        }
-    }
-
-    /**
-     * Method to get all paths registered.
-     * 
+     * @param  string $resource
+     * @param  string $type
      * @return array
      */
-    public function getPaths()
+    abstract public function load($resource, $type = 'php');
+    
+    /**
+     * Method to add support for resource loader.
+     * 
+     * @param  string $resource
+     * @param  string $type
+     * @return 
+     */
+    public function supports($resource, $type = 'php')
     {
-        return $this->paths;
+        return is_string($resource) && $type === pathinfo(
+            $resource,
+            PATHINFO_EXTENSION
+        );
     }
 }
 
-/** @end ConfigLocator.php **/
+/** @end ConfigLoader.php **/

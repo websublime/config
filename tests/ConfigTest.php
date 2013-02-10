@@ -1,7 +1,7 @@
-<?php namespace Websublime\Config;
+<?php
 /**
 * ------------------------------------------------------------------------------------
-* ConfigLocator.php
+* ConfigTest.php
 * ------------------------------------------------------------------------------------
 *
 * @package Websublime
@@ -31,48 +31,17 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-use Symfony\Component\Config\FileLocator;
+use Websublime\Config\Config;
 
-/**
- * Class for register paths to find config files.
- */
-class ConfigLocator extends FileLocator {
+class ConfigTest extends \PHPUnit_Framework_TestCase {
 
-    /**
-     * Method construct that accepts an arrays of dirs paths.
-     * 
-     * @param array $dirs
-     */
-    public function __construct(array $dirs = array())
+    public function testConfigueInstance()
     {
-        parent::__construct($dirs);
-    }
+        $config = new Config();
 
-    /**
-     * Method to add a path or an array of paths to locator for future search of files.
-     * 
-     * @param string/array $path
-     */
-    public function addPath($path)
-    {
-        if(is_string($path)){
-            $this->paths[] = $path;            
-        }
-        
-        if(is_array($path)){
-            $this->paths = array_merge($this->paths, $paths);
-        }
-    }
-
-    /**
-     * Method to get all paths registered.
-     * 
-     * @return array
-     */
-    public function getPaths()
-    {
-        return $this->paths;
+        $this->assertInstanceOf('Websublime\Config\Config', $config);
+        print sprintf('Config is instance: %s','Websublime\Config\Config').PHP_EOL;
     }
 }
 
-/** @end ConfigLocator.php **/
+/** @end ConfigTest.php **/

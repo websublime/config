@@ -1,7 +1,7 @@
-<?php namespace Websublime\Config;
+<?php
 /**
 * ------------------------------------------------------------------------------------
-* ConfigLocator.php
+* YamlConfigLoaderTest.php
 * ------------------------------------------------------------------------------------
 *
 * @package Websublime
@@ -31,48 +31,18 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-use Symfony\Component\Config\FileLocator;
 
-/**
- * Class for register paths to find config files.
- */
-class ConfigLocator extends FileLocator {
+use Websublime\Config\Loader\YamlConfigLoader;
 
-    /**
-     * Method construct that accepts an arrays of dirs paths.
-     * 
-     * @param array $dirs
-     */
-    public function __construct(array $dirs = array())
+class YamlConfigLoaderTest extends \PHPUnit_Framework_TestCase {
+
+    public function testConfigueCatalogueInstance()
     {
-        parent::__construct($dirs);
-    }
+        $yaml = new YamlConfigLoader(dirname(__DIR__));
 
-    /**
-     * Method to add a path or an array of paths to locator for future search of files.
-     * 
-     * @param string/array $path
-     */
-    public function addPath($path)
-    {
-        if(is_string($path)){
-            $this->paths[] = $path;            
-        }
-        
-        if(is_array($path)){
-            $this->paths = array_merge($this->paths, $paths);
-        }
-    }
-
-    /**
-     * Method to get all paths registered.
-     * 
-     * @return array
-     */
-    public function getPaths()
-    {
-        return $this->paths;
+        $this->assertInstanceOf('Websublime\Config\Loader\YamlConfigLoader', $yaml);
+        print sprintf('Catalogue is instance: %s','Websublime\Config\Loader\YamlConfigLoader').PHP_EOL;
     }
 }
 
-/** @end ConfigLocator.php **/
+/** @end YamlConfigLoaderTest.php **/

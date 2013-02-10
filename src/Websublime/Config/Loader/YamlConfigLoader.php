@@ -1,7 +1,7 @@
-<?php namespace Websublime\Config;
+<?php namespace Websublime\Config\Loader;
 /**
 * ------------------------------------------------------------------------------------
-* ConfigLocator.php
+* YamlConfigLoader.php
 * ------------------------------------------------------------------------------------
 *
 * @package Websublime
@@ -31,48 +31,29 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-use Symfony\Component\Config\FileLocator;
+use Symfony\Component\Yaml\Yaml,
+    Symfony\Component\Config\Resource\FileResource,
+    Websublime\Config\ConfigLocator;
 
-/**
- * Class for register paths to find config files.
- */
-class ConfigLocator extends FileLocator {
+class YamlConfigLoader extends ConfigLoader {
 
-    /**
-     * Method construct that accepts an arrays of dirs paths.
-     * 
-     * @param array $dirs
-     */
-    public function __construct(array $dirs = array())
+    public function __construct($path)
     {
-        parent::__construct($dirs);
+        parent::__construct(new ConfigLocator(array($path)));
     }
 
-    /**
-     * Method to add a path or an array of paths to locator for future search of files.
-     * 
-     * @param string/array $path
-     */
-    public function addPath($path)
+    public function load($resource, $type = 'yaml')
     {
-        if(is_string($path)){
-            $this->paths[] = $path;            
-        }
+        $file = $this->getLocator()->locate($resource);
         
-        if(is_array($path)){
-            $this->paths = array_merge($this->paths, $paths);
+        $preferences = Yaml::parse($file);
+        
+        if (!is_array($preferences)) {
+            throw new \InvalidArgumentException(sprintf('The file "%s" must contain a YAML array.', $resource));
         }
-    }
 
-    /**
-     * Method to get all paths registered.
-     * 
-     * @return array
-     */
-    public function getPaths()
-    {
-        return $this->paths;
+        return new FileResource($file);
     }
 }
 
-/** @end ConfigLocator.php **/
+/** @end YamlConfigLoader.php **/
