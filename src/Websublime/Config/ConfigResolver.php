@@ -1,7 +1,7 @@
 <?php namespace Websublime\Config;
 /**
 * ------------------------------------------------------------------------------------
-* Config.php
+* ConfigResolver.php
 * ------------------------------------------------------------------------------------
 *
 * @package Websublime
@@ -31,65 +31,37 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
+
 use Symfony\Component\Config\Loader\LoaderInterface,
-    Websublime\Config\Loader\ConfigLoaderException;
+    Symfony\Component\Config\Loader\LoaderResolver,
+    Symfony\Component\Config\Loader\DelegatingLoader;
 
-class Config {
-
-    private $catalogue;
+class ConfigResolver {
 
     private $resolver;
 
-    public function __construct($itens = array())
+    private $loader;
+
+    public function __construct(LoaderInterface $loader)
     {
-        $this->catalogue = new ConfigCatalogue($itens);
+        $this->loader = new LoaderResolver(array($loader));
+
+        $this->resolver = new DelegatingLoader($this->loader);
     }
 
-    public function getCatalogue()
-    {
-        return $this->catalogue;
-    }
-
-    public function import($file)
-    {
-        if(is_null($this->resolver)){
-            throw new BadMethodCallException("Please first setConfigResolver() to know what to use to import a file.", 1);   
-        }
-
-        $loader = $this->resolver->getDelegateLoader();
-
-        $type = pathinfo($file,PATHINFO_EXTENSION);
-
-        if($type == 'yml' OR $type == 'php'){
-            $loaded = $loader->load($file, $type);
-
-            $name = (basename($file, ".".$type));
-
-            $this->add($loaded, $name);
-        } else {
-            throw new ConfigLoaderException($file, 'The file you selected is not valid for loading with current ConfigLoaders.', 1); 
-        }
-        
-    }
-
-    public function setConfigResolver(LoaderInterface $loader)
-    {
-        $this->resolver = new ConfigResolver($loader);
-    }
-
-    public function getConfigResolver()
+    public function getDelegateLoader()
     {
         return $this->resolver;
     }
 
     public function __call($method, $args)
     {
-        if(!method_exists($this->catalogue, $method)){
-            throw new BadMethodCallException("The method do not exist in ConfigCatalogue.", 1);        
+        if(!method_exists($this->resolver, $method)){
+            throw new BadMethodCallException("The method do not exist in DelegatingLoader.", 1);        
         }
 
-        return call_user_func_array(array($this->catalogue, $method), $args);
+        return call_user_func_array(array($this->resolver, $method), $args);
     }
 }
 
-/** @end Config.php **/
+/** @end ConfigResolver.php **/

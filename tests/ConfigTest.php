@@ -32,7 +32,8 @@
 * THE SOFTWARE.
 */
 use Websublime\Config\Config,
-    Websublime\Config\Loader\YamlConfigLoader;
+    Websublime\Config\Loader\YamlConfigLoader,
+    Websublime\Config\Loader\ConfigLoaderException;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase {
 
@@ -94,6 +95,42 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertInstanceOf('Websublime\Config\ConfigResolver', $resolver);
         print sprintf('Resolver is instance: %s','Websublime\Config\ConfigResolver').PHP_EOL;
+    }
+
+    public function testConfigImport()
+    {
+        $path = dirname(__DIR__).'/tests/data';
+
+        $yaml = new YamlConfigLoader($path);
+
+        $config = new Config();
+        $config->setConfigResolver($yaml);
+
+        $config->import('config.yml');
+
+        $exist = $yaml->exist('config');
+
+        $this->assertTrue($exist);
+        print 'Config.yml exist'.PHP_EOL;
+    }
+
+    public function testConfigInvalidFile()
+    {
+        $path = dirname(__DIR__).'/tests/data';
+
+        $yaml = new YamlConfigLoader($path);
+
+        $config = new Config();
+        $config->setConfigResolver($yaml);
+
+        try {
+            $config->import('config.ini');
+        } catch (ConfigLoaderException $expected) {
+            print sprintf('Config throw ConfigLoaderException : %s',$expected->getMessage()).PHP_EOL;
+            return;
+        }
+
+        $this->fail('An expected exception has not been raised.');
     }
 }
 

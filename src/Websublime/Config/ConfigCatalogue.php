@@ -35,7 +35,7 @@
 /**
  * Class for catalogue options configurations.
  */
-class ConfigCatalogue {
+class ConfigCatalogue implements ConfigCatalogueInterface {
 
     /**
      * Config options catalogue flatten array.
@@ -66,7 +66,13 @@ class ConfigCatalogue {
     public function add($option, $key = null)
     {
         if(is_array($option)){
-            !is_null($key) ? $this->flatten($option = array($key, $option)) : $this->flatten($option);
+
+            if(is_null($key)){
+                $this->flatten($option);
+            } else {
+                $option = array($key => $option);
+                $this->flatten($option);
+            }
 
             return $this->catalogue = array_merge($this->catalogue, $option);
         }
@@ -130,6 +136,7 @@ class ConfigCatalogue {
     {
         return $this->catalogue;
     }
+
 
     /**
      * Convert multidimensionals array in one level.
