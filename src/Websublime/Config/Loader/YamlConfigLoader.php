@@ -35,13 +35,37 @@ use Symfony\Component\Yaml\Yaml,
     Symfony\Component\Config\Resource\FileResource,
     Websublime\Config\ConfigLocator;
 
+/**
+ * Class to load yaml resources.
+ */
 class YamlConfigLoader extends ConfigLoader {
 
+    /**
+     * Cached file resources.
+     * 
+     * @var array
+     */
+    private $resources = array();
+
+    /**
+     * Method to construct class that depends on a path or array of paths
+     * where it can search for resources.
+     * 
+     * @param string/array $path
+     */
     public function __construct($path)
     {
-        parent::__construct(new ConfigLocator(array($path)));
+        $locator = is_array($path) ? new ConfigLocator($path) : new ConfigLocator(array($path));
+
+        parent::__construct($locator);
     }
 
+    /**
+     * Method to load options from an resource file
+     * @param  string $resource
+     * @param  string $type
+     * @return array
+     */
     public function load($resource, $type = 'yaml')
     {
         $file = $this->getLocator()->locate($resource);
@@ -52,8 +76,97 @@ class YamlConfigLoader extends ConfigLoader {
             throw new \InvalidArgumentException(sprintf('The file "%s" must contain a YAML array.', $resource));
         }
 
-        return new FileResource($file);
+        $this->addResource(new FileResource($file));
+
+        return $preferences;
     }
+
+    /**
+     * Method to add resources to be load.
+     * 
+     * @param FileResource $resource
+     */
+    public function addResource(FileResource $resource)
+    {
+        $name = (basename($resource->getResource(), ".yaml"));
+
+        if(!array_key_exists($name, $this->resources)){
+            $this->resources[$name] = $resource;
+        }
+    }
+
+    /**
+     * Method to get cached resources.
+     * 
+     * @param  string $name
+     * @return FileResource
+     */
+    public function getResource($name)
+    {
+        if($this->exist($name)){
+            return $this->resources[$name];
+        }
+    }
+
+    /**
+     * Method to get all cached resources.
+     * 
+     * @return array
+     */
+    public function getResources()
+    {
+        return $this->resources;
+    }
+
+    /**
+     * Method to load all registered resources.
+     * 
+     * @return array
+     */
+    public function loadResources()
+    {
+        $loaded = array();
+
+        foreach ($this->resources as $name => $resource) {
+            $loaded[$name] = $this->load($resource->getResource());
+        }
+
+        return $loaded;
+    }
+
+    /**
+     * Method to check if resource exist in cache.
+     * @param  string $resource
+     * @return boolean
+     */
+    public function exist($resource)
+    {
+        if(array_key_exists($resource, $this->resources)){
+            try {
+                $this->getLocator()->locate($resource.'.yaml');
+            } catch (InvalidArgumentException $e) {
+                return false;
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Method to remove a registered resource.
+     * 
+     * @param  string $resource
+     * @return void
+     */
+    public function remove($resource)
+    {
+        if($this->exist($resource)){
+            unset($this->resources[$resource]);
+        }
+    }
+
 }
 
 /** @end YamlConfigLoader.php **/
