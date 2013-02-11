@@ -34,22 +34,52 @@
 use Symfony\Component\Config\Loader\LoaderInterface,
     Websublime\Config\Loader\ConfigLoaderException;
 
+/**
+ * Class for general config.
+ */
 class Config {
 
+    /**
+     * Catalogue of options config.
+     * 
+     * @var ConfigCatalogue
+     */
     private $catalogue;
 
+    /**
+     * ConfigResolver attribute.
+     * 
+     * @var ConfigResolver
+     */
     private $resolver;
 
+    /**
+     * Method to construct. Accepts an array of items to be added to ConfigCatalogue.
+     * 
+     * @param array $itens
+     */
     public function __construct($itens = array())
     {
         $this->catalogue = new ConfigCatalogue($itens);
     }
 
+    /**
+     * Method to get an instance of ConfigCatalogue;
+     * 
+     * @return ConfigCatalogue
+     */
     public function getCatalogue()
     {
         return $this->catalogue;
     }
 
+    /**
+     * Method to import from a file options to add to ConfigCatalogue. Be sure to call
+     * this method after setConfgResolver for loading the type of file.
+     * 
+     * @param  string $file
+     * @return void
+     */
     public function import($file)
     {
         if(is_null($this->resolver)){
@@ -72,16 +102,33 @@ class Config {
         
     }
 
+    /**
+     * Method to set the type of loader to use.
+     * 
+     * @param LoaderInterface $loader
+     */
     public function setConfigResolver(LoaderInterface $loader)
     {
         $this->resolver = new ConfigResolver($loader);
     }
 
+    /**
+     * Method to get an instance of ConfigResolver.
+     * 
+     * @return ConfigResolver
+     */
     public function getConfigResolver()
     {
         return $this->resolver;
     }
 
+    /**
+     * Magic method to call from ConfigCatalogue methods.
+     * 
+     * @param  string $method
+     * @param  mixed $args
+     * @return mixed
+     */
     public function __call($method, $args)
     {
         if(!method_exists($this->catalogue, $method)){
