@@ -50,7 +50,7 @@ class YamlConfigLoaderTest extends \PHPUnit_Framework_TestCase {
         $path = dirname(__DIR__).'/tests/data';
 
         $yaml = new YamlConfigLoader($path);
-        $config = $yaml->load('config.yaml','yaml');
+        $config = $yaml->load('config.yml','yml');
 
         $this->assertArrayHasKey('config', $config);
         print sprintf('YamlFile have key: %s as an option.','config').PHP_EOL;
@@ -61,7 +61,7 @@ class YamlConfigLoaderTest extends \PHPUnit_Framework_TestCase {
         $path = dirname(__DIR__).'/tests/data';
 
         $yaml = new YamlConfigLoader($path);
-        $yaml->addResource(new FileResource($path.'/options.yaml'));
+        $yaml->addResource(new FileResource($path.'/options.yml'));
         $resource = $yaml->getResource('options');
 
         $this->assertFileExists($resource->getResource());
@@ -73,8 +73,8 @@ class YamlConfigLoaderTest extends \PHPUnit_Framework_TestCase {
         $path = dirname(__DIR__).'/tests/data';
 
         $yaml = new YamlConfigLoader($path);
-        $yaml->addResource(new FileResource($path.'/options.yaml'));
-        $yaml->addResource(new FileResource($path.'/config.yaml'));
+        $yaml->addResource(new FileResource($path.'/options.yml'));
+        $yaml->addResource(new FileResource($path.'/config.yml'));
 
         $resources = $yaml->getResources();
 
@@ -89,8 +89,8 @@ class YamlConfigLoaderTest extends \PHPUnit_Framework_TestCase {
         $path = dirname(__DIR__).'/tests/data';
 
         $yaml = new YamlConfigLoader($path);
-        $yaml->addResource(new FileResource($path.'/options.yaml'));
-        $yaml->addResource(new FileResource($path.'/config.yaml'));
+        $yaml->addResource(new FileResource($path.'/options.yml'));
+        $yaml->addResource(new FileResource($path.'/config.yml'));
 
         $resources = $yaml->loadResources();
 
@@ -105,7 +105,7 @@ class YamlConfigLoaderTest extends \PHPUnit_Framework_TestCase {
         $path = dirname(__DIR__).'/tests/data';
 
         $yaml = new YamlConfigLoader($path);
-        $yaml->load('config.yaml','yaml');
+        $yaml->load('config.yml','yml');
         $exist = $yaml->exist('config');
 
         $this->assertTrue($exist);

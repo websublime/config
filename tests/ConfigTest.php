@@ -31,7 +31,8 @@
 * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 * THE SOFTWARE.
 */
-use Websublime\Config\Config;
+use Websublime\Config\Config,
+    Websublime\Config\Loader\YamlConfigLoader;
 
 class ConfigTest extends \PHPUnit_Framework_TestCase {
 
@@ -41,6 +42,58 @@ class ConfigTest extends \PHPUnit_Framework_TestCase {
 
         $this->assertInstanceOf('Websublime\Config\Config', $config);
         print sprintf('Config is instance: %s','Websublime\Config\Config').PHP_EOL;
+    }
+
+    public function testConfigGetCatalogue()
+    {
+        $config = new Config();
+        $catalogue = $config->getCatalogue();
+
+        $this->assertInstanceOf('Websublime\Config\ConfigCatalogue', $catalogue);
+        print sprintf('ConfigCatalogue is instance: %s','Websublime\Config\ConfigCatalogue').PHP_EOL;
+    }
+
+    public function testConfigAddSimple()
+    {
+        $config = new Config();
+        $config->add('Hello Option','option');
+        $exist = $config->exist('option');
+
+        $this->assertTrue($exist);
+        print sprintf('ConfigueCatalogue as confirm that %s exist.','option').PHP_EOL;
+    }
+
+    public function testConfigAddArrayNoKey()
+    {
+        $config = new Config();
+        $config->add(array('hello'=>'option'));
+        $exist = $config->exist('hello');
+
+        $this->assertTrue($exist);
+        print sprintf('ConfigueCatalogue as confirm that %s exist.','hello').PHP_EOL;
+    }
+
+    public function testConfigAddArrayWithKey()
+    {
+        $config = new Config();
+        $config->add(array('hello'=>'option'),'config');
+        $exist = $config->exist('config.hello');
+
+        $this->assertTrue($exist);
+        print sprintf('ConfigueCatalogue as confirm that %s exist.','config.hello').PHP_EOL;
+    }
+
+    public function testConfigsetConfigResolver()
+    {
+        $yaml = new YamlConfigLoader(dirname(__DIR__));
+
+        $config = new Config();
+        $config->setConfigResolver($yaml);
+
+        $resolver = $config->getConfigResolver();
+
+        $this->assertInstanceOf('Websublime\Config\ConfigResolver', $resolver);
+        print sprintf('Resolver is instance: %s','Websublime\Config\ConfigResolver').PHP_EOL;
     }
 }
 

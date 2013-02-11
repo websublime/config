@@ -66,7 +66,7 @@ class YamlConfigLoader extends ConfigLoader {
      * @param  string $type
      * @return array
      */
-    public function load($resource, $type = 'yaml')
+    public function load($resource, $type = 'yml')
     {
         $file = $this->getLocator()->locate($resource);
         
@@ -88,7 +88,7 @@ class YamlConfigLoader extends ConfigLoader {
      */
     public function addResource(FileResource $resource)
     {
-        $name = (basename($resource->getResource(), ".yaml"));
+        $name = (basename($resource->getResource(), ".yml"));
 
         if(!array_key_exists($name, $this->resources)){
             $this->resources[$name] = $resource;
@@ -143,7 +143,7 @@ class YamlConfigLoader extends ConfigLoader {
     {
         if(array_key_exists($resource, $this->resources)){
             try {
-                $this->getLocator()->locate($resource.'.yaml');
+                $this->getLocator()->locate($resource.'.yml');
             } catch (InvalidArgumentException $e) {
                 return false;
             }
