@@ -36,31 +36,52 @@ use Symfony\Component\Config\Loader\LoaderInterface,
     Symfony\Component\Config\Loader\LoaderResolver,
     Symfony\Component\Config\Loader\DelegatingLoader;
 
+/**
+ * Class to resolve dependents classes.
+ */
 class ConfigResolver {
 
     private $resolver;
 
-    private $loader;
+    private $delegate;
+
+    protected $loader;
 
     public function __construct(LoaderInterface $loader)
     {
-        $this->loader = new LoaderResolver(array($loader));
+        $this->loader = $loader;
 
-        $this->resolver = new DelegatingLoader($this->loader);
+        $this->resolver = new LoaderResolver(array($loader));
+
+        $this->delegate = new DelegatingLoader($this->resolver);
     }
 
     public function getDelegateLoader()
+    {
+        return $this->delegate;
+    }
+
+    public function getLoaderResolver()
     {
         return $this->resolver;
     }
 
     public function __call($method, $args)
     {
-        if(!method_exists($this->resolver, $method)){
-            throw new BadMethodCallException("The method do not exist in DelegatingLoader.", 1);        
+        if(method_exists($this->resolver, $method)){
+            return call_user_func_array(array($this->resolver, $method), $args);      
         }
 
-        return call_user_func_array(array($this->resolver, $method), $args);
+        if(method_exists($this->delegate, $method)){
+            return call_user_func_array(array($this->delegate, $method), $args);
+        }
+
+        if(method_exists($this->loader, $method)){
+            return call_user_func_array(array($this->loader, $method), $args);
+        }
+
+        throw new BadMethodCallException("The method do not exist in ConfigResolver.", 1);  
+        
     }
 }
 
