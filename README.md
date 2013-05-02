@@ -8,7 +8,7 @@ Config component is a package basead on Symfony Config where it is used as a cat
 ##How To Use
 First create an instance of wich type of loader for the file you want to use.
 
-	$yaml = new YamlConfigLoader('/path/where/confg/will/be');
+	$yaml = new YamlConfigLoader('/path/where/config/will/be');
 	
 Then create an instance of Config and set the loader resolver.
 
@@ -38,4 +38,6 @@ The methods present in ConfigCatalogue are:
 	
 Of course it isn't mandatory to use a file of configurations. You can use it without one. Just instantiate the Config and you are rock and load to use the ConfigueCatalogue methods.
 
-More info will be added.
+## Changelog
+	- Added version 0.2
+	- Added support for loading php files for configs
