@@ -7,7 +7,7 @@
 * @package Websublime
 * @author  Miguel Ramos <miguel.marques.ramos@gmail.com>
 * @link    https://www.websublime.com
-* @version 0.1
+* @version 0.2
 *
 * This file is part of Websublime Project.
 *
