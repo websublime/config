@@ -41,3 +41,4 @@ Of course it isn't mandatory to use a file of configurations. You can use it wit
 ## Changelog
 	- Added version 0.2
 	- Added support for loading php files for configs
+	- Added methods getDelegateLoader() and getLoaderResolver() on ConfigResolver.
