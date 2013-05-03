@@ -1,14 +1,16 @@
 {
     "name"        : "websublime/config",
     "type"        : "package",
-    "description" : "A config componente catalogue.",
-    "keywords"    : ["config, component, catalogue"],
+    "description" : "A config component catalogue.",
+    "keywords"    : ["config","component","catalogue"],
     "homepage"    : "https://github.com/websublime/config",
     "license"     : "MIT",
     "authors"     : [
         {
             "name"  : "Miguel Ramos",
-            "email" : "miguel.marques.ramos@gmail.com"
+            "email" : "miguel.marques.ramos@gmail.com",
+            "homepage": "http://www.websublime.com",
+            "role": "Developer"
         }
     ],
     "require": {
