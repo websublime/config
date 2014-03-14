@@ -6,7 +6,7 @@ Websublime\Config
 Config component is a package based on Symfony Config where it is used as a catalogue of configurations. It can be inserted or just loading from two types of files: yml and php. We do not have made more supported files because it is this kind of files that we most use.
 
 ##How To Use
-First create an instance of wich type of loader for the file you want to use.
+First create an instance of which type of loader for the file you want to use.
 
 	$yaml = new YamlConfigLoader('/path/where/config/will/be');
 	
